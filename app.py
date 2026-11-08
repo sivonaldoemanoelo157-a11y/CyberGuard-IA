@@ -22,3 +22,6 @@ def analisar_mensagem(mensagem):
         print("Nenhum termo suspeito encontrado.")
 
 print("CyberGuard IA iniciada!")
+
+mensagem = input("Digite uma mensagem para analisar: ")
+analisar_mensagem(mensagem)
