@@ -1,41 +1,51 @@
 
 
 def analisar_mensagem(mensagem):
-    suspeitas = [
+    palavras_suspeitas = [
         "senha",
         "pix",
+        "urgente",
         "clique aqui",
         "prêmio",
-        "urgente",
-        "código de verificação"
+        "premio",
+        "código de verificação",
+        "conta bloqueada",
+        "confirmar dados"
     ]
 
     mensagem = mensagem.lower()
 
     encontrados = [
-        palavra for palavra in suspeitas
+        palavra for palavra in palavras_suspeitas
         if palavra in mensagem
     ]
 
+    return encontrados
+
+
+def verificar_mensagem(mensagem):
+    encontrados = analisar_mensagem(mensagem)
+
     if encontrados:
-        print("ATENÇÃO: mensagem suspeita!")
-        print("Termos encontrados:", encontrados)
-    else:
-        print("Nenhum termo suspeito encontrado.")
+        return "⚠️ Mensagem suspeita! Termos encontrados: " + ", ".join(encontrados)
 
-print("CyberGuard IA iniciada!")
+    return "✅ Nenhum termo suspeito encontrado."
 
-mensagem = input("Digite uma mensagem para analisar: ")
-analisar_mensagem(mensagem)
-    mensagem = mensagem.lower()
-    palavras_suspeitas = ["senha", "pix", "urgente", "clique aqui", "prêmio"]
-    
 
-            if palavra in mensagem:
-                        return True    
-            return False
-            def verificar_mensagem(mensagem):
-                    if analisar_mensagem(mensagem):
-                            return "⚠️ Mensagem suspeita!"
-                                return "✅ Mensagem aparentemente segura."
-                                Atualizando CyberGuard IAAtualizando CyberGuard IA
+def testar_cyberguard():
+    mensagens = [
+        "Clique aqui para ganhar um prêmio!",
+        "Sua conta foi bloqueada, confirme seus dados.",
+        "Olá, tudo bem? Como foi seu dia?"
+    ]
+
+    print("CyberGuard IA iniciada!\n")
+
+    for mensagem in mensagens:
+        print("Mensagem:", mensagem)
+        print("Resultado:", verificar_mensagem(mensagem))
+        print("-" * 40)
+
+
+if __name__ == "__main__":
+    testar_cyberguard()
