@@ -10,7 +10,11 @@ def analisar_mensagem(mensagem):
         "premio",
         "código de verificação",
         "conta bloqueada",
-        "confirmar dados"
+        "conta foi bloqueada",
+        "foi bloqueada",
+        "confirmar dados",
+        "confirme seus dados",
+        "confirme seus dados imediatamente"
     ]
 
     mensagem = mensagem.lower()
@@ -27,7 +31,10 @@ def verificar_mensagem(mensagem):
     encontrados = analisar_mensagem(mensagem)
 
     if encontrados:
-        return "⚠️ Mensagem suspeita! Termos encontrados: " + ", ".join(encontrados)
+        return (
+            "⚠️ Mensagem suspeita! Termos encontrados: "
+            + ", ".join(encontrados)
+        )
 
     return "✅ Nenhum termo suspeito encontrado."
 
@@ -39,7 +46,7 @@ def testar_cyberguard():
         "Olá, tudo bem? Como foi seu dia?"
     ]
 
-    print("CyberGuard IA iniciada!\n")
+    print("🛡️ CyberGuard IA iniciada!\n")
 
     for mensagem in mensagens:
         print("Mensagem:", mensagem)
