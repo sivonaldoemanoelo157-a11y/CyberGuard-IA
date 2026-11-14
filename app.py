@@ -38,4 +38,4 @@ analisar_mensagem(mensagem)
                     if analisar_mensagem(mensagem):
                             return "⚠️ Mensagem suspeita!"
                                 return "✅ Mensagem aparentemente segura."
-                                
+                                Atualizando CyberGuard IAAtualizando CyberGuard IA
