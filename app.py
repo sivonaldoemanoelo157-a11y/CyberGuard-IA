@@ -1,17 +1,16 @@
 
-# CYBERGUARD IA - ETAPA 6
-# DETECCAO MELHORADA DE GOLPES
+# CYBERGUARD IA - ETAPA 7
+# REDUCAO DE FALSOS ALERTAS
 
 import unicodedata
 
 biblioteca_golpes = {
     "Roubo de dados": [
-        "senha",
-        "codigo de verificacao",
-        "confirmar dados",
+        "informe sua senha",
+        "envie sua senha",
         "confirme seus dados",
+        "codigo de verificacao",
         "envie o codigo",
-        "codigo recebido",
         "dados bancarios",
         "informacoes pessoais"
     ],
@@ -24,16 +23,14 @@ biblioteca_golpes = {
         "emprestimo aprovado"
     ],
     "Links suspeitos": [
-        "clique aqui",
-        "acesse o link",
-        "link de confirmacao",
-        "link para atualizar",
-        "acesse agora"
+        "clique aqui para confirmar",
+        "acesse o link de confirmacao",
+        "link para atualizar seus dados",
+        "acesse agora para receber"
     ],
     "Falsas urgencias": [
-        "urgente",
-        "conta bloqueada",
-        "conta foi bloqueada",
+        "sua conta foi bloqueada",
+        "conta sera bloqueada",
         "acao imediata",
         "ultima oportunidade",
         "sua conta sera encerrada"
@@ -54,16 +51,16 @@ def normalizar(texto):
 
 
 def analisar_mensagem(mensagem):
-    mensagem_normalizada = normalizar(mensagem)
+    mensagem = normalizar(mensagem)
     encontrados = {}
 
-    for categoria, palavras in biblioteca_golpes.items():
-        for palavra in palavras:
-            if palavra in mensagem_normalizada:
+    for categoria, frases in biblioteca_golpes.items():
+        for frase in frases:
+            if frase in mensagem:
                 if categoria not in encontrados:
                     encontrados[categoria] = []
 
-                encontrados[categoria].append(palavra)
+                encontrados[categoria].append(frase)
 
     return encontrados
 
@@ -86,15 +83,16 @@ def verificar_mensagem(mensagem):
         resultado += f"Risco: {risco}\n"
         resultado += "Motivos encontrados:\n"
 
-        for categoria, palavras in encontrados.items():
+        for categoria, frases in encontrados.items():
             resultado += f"\n{categoria}:\n"
 
-            for palavra in palavras:
-                resultado += f"- {palavra}\n"
+            for frase in frases:
+                resultado += f"- {frase}\n"
     else:
         resultado = (
-            "Nenhum termo suspeito encontrado.\n"
-            "Risco: BAIXO"
+            "Nenhum sinal conhecido foi encontrado.\n"
+            "Risco: BAIXO\n"
+            "Isso nao garante que a mensagem seja segura."
         )
 
     return risco, resultado
@@ -116,7 +114,7 @@ def mostrar_historico():
 
 
 def iniciar_cyberguard():
-    print("CYBERGUARD IA - ETAPA 6")
+    print("CYBERGUARD IA - ETAPA 7")
     print("Digite 'historico' para consultar.")
     print("Digite 'limpar' para apagar o historico.")
     print("Digite 'sair' para encerrar.\n")
