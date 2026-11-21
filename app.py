@@ -1,52 +1,69 @@
 
-# CYBERGUARD IA - ETAPA 5
-# HISTORICO DE ANALISES
+# CYBERGUARD IA - ETAPA 6
+# DETECCAO MELHORADA DE GOLPES
+
+import unicodedata
 
 biblioteca_golpes = {
     "Roubo de dados": [
         "senha",
-        "código de verificação",
+        "codigo de verificacao",
         "confirmar dados",
         "confirme seus dados",
-        "envie o código",
-        "código recebido"
+        "envie o codigo",
+        "codigo recebido",
+        "dados bancarios",
+        "informacoes pessoais"
     ],
     "Golpes financeiros": [
-        "prêmio falso",
-        "ganhe dinheiro fácil",
-        "transferência urgente",
-        "pix premiado"
+        "premio falso",
+        "ganhe dinheiro facil",
+        "transferencia urgente",
+        "pix premiado",
+        "dinheiro gratis",
+        "emprestimo aprovado"
     ],
     "Links suspeitos": [
         "clique aqui",
         "acesse o link",
-        "link de confirmação",
-        "link para atualizar"
+        "link de confirmacao",
+        "link para atualizar",
+        "acesse agora"
     ],
-    "Falsas urgências": [
+    "Falsas urgencias": [
         "urgente",
         "conta bloqueada",
         "conta foi bloqueada",
-        "ação imediata",
-        "última oportunidade"
+        "acao imediata",
+        "ultima oportunidade",
+        "sua conta sera encerrada"
     ]
 }
 
 historico = []
 
 
+def normalizar(texto):
+    texto = texto.lower()
+    texto = unicodedata.normalize("NFD", texto)
+
+    return "".join(
+        caractere for caractere in texto
+        if unicodedata.category(caractere) != "Mn"
+    )
+
+
 def analisar_mensagem(mensagem):
-    mensagem = mensagem.lower()
+    mensagem_normalizada = normalizar(mensagem)
     encontrados = {}
 
     for categoria, palavras in biblioteca_golpes.items():
         for palavra in palavras:
-            if palavra in mensagem:
+            if palavra in mensagem_normalizada:
                 if categoria not in encontrados:
                     encontrados[categoria] = []
 
-                if palavra not in encontrados[categoria]:
-                    encontrados[categoria].append(palavra)
+                encontrados[categoria].append(palavra)
 
     return encontrados
 
@@ -85,13 +102,13 @@ def verificar_mensagem(mensagem):
 
 def mostrar_historico():
     if not historico:
-        print("\nNenhuma análise registrada.")
+        print("\nNenhuma analise registrada.")
         return
 
-    print("\nHISTÓRICO DE ANÁLISES")
+    print("\nHISTORICO DE ANALISES")
 
     for numero, registro in enumerate(historico, start=1):
-        print(f"\nAnálise {numero}")
+        print(f"\nAnalise {numero}")
         print(f"Mensagem: {registro['mensagem']}")
         print(f"Risco: {registro['risco']}")
 
@@ -99,14 +116,13 @@ def mostrar_historico():
 
 
 def iniciar_cyberguard():
-    print("CYBERGUARD IA - ETAPA 5")
+    print("CYBERGUARD IA - ETAPA 6")
     print("Digite 'historico' para consultar.")
-    print("Digite 'limpar' para apagar o histórico.")
+    print("Digite 'limpar' para apagar o historico.")
     print("Digite 'sair' para encerrar.\n")
 
     while True:
         mensagem = input("Digite ou cole uma mensagem: ")
-
         comando = mensagem.lower().strip()
 
         if comando == "sair":
@@ -119,7 +135,7 @@ def iniciar_cyberguard():
 
         if comando == "limpar":
             historico.clear()
-            print("Histórico apagado!")
+            print("Historico apagado!")
             continue
 
         if not mensagem.strip():
@@ -133,7 +149,7 @@ def iniciar_cyberguard():
             "risco": risco
         })
 
-        print("\nResultado da análise:")
+        print("\nResultado da analise:")
         print(resultado)
         print("-" * 40)
 
