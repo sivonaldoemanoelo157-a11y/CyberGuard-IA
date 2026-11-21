@@ -1,5 +1,5 @@
 
-# CYBERGUARD IA - ETAPA 3
+# CYBERGUARD IA - ETAPA 4
 
 biblioteca_golpes = {
     "Roubo de dados": [
@@ -37,12 +37,16 @@ biblioteca_golpes = {
 
 def analisar_mensagem(mensagem):
     mensagem = mensagem.lower()
-    encontrados = []
+    encontrados = {}
 
     for categoria, palavras in biblioteca_golpes.items():
         for palavra in palavras:
             if palavra in mensagem:
-                encontrados.append((categoria, palavra))
+                if categoria not in encontrados:
+                    encontrados[categoria] = []
+
+                if palavra not in encontrados[categoria]:
+                    encontrados[categoria].append(palavra)
 
     return encontrados
 
@@ -50,11 +54,7 @@ def analisar_mensagem(mensagem):
 def verificar_mensagem(mensagem):
     encontrados = analisar_mensagem(mensagem)
 
-    categorias = set(
-        categoria for categoria, palavra in encontrados
-    )
-
-    quantidade = len(categorias)
+    quantidade = len(encontrados)
 
     if quantidade >= 3:
         risco = "ALTO"
@@ -66,17 +66,17 @@ def verificar_mensagem(mensagem):
         risco = "BAIXO"
 
     if encontrados:
-        motivos = [
-            f"{categoria}: {palavra}"
-            for categoria, palavra in encontrados
-        ]
+        resultado = "Sinais suspeitos encontrados!\n"
+        resultado += f"Risco: {risco}\n"
+        resultado += "Motivos encontrados:\n"
 
-        return (
-            "Sinais suspeitos encontrados!\n"
-            f"Risco: {risco}\n"
-            "Motivos encontrados:\n"
-            + "\n".join(motivos)
-        )
+        for categoria, palavras in encontrados.items():
+            resultado += f"\n{categoria}:\n"
+
+            for palavra in palavras:
+                resultado += f"- {palavra}\n"
+
+        return resultado
 
     return (
         "Nenhum termo suspeito encontrado.\n"
