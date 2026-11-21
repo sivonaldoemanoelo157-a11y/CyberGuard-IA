@@ -1,6 +1,5 @@
 
-
-# 🛡️ BIBLIOTECA DE DETECÇÃO DO CYBERGUARD IA
+# CYBERGUARD IA - ANALISE DE MENSAGENS
 
 biblioteca_golpes = {
     "Roubo de dados": [
@@ -83,21 +82,29 @@ def verificar_mensagem(mensagem):
     )
 
 
-def testar_cyberguard():
-    mensagens = [
-        "Clique aqui para ganhar um prêmio falso!",
-        "Sua conta foi bloqueada, confirme seus dados.",
-        "Olá, tudo bem? Como foi seu dia?",
-        "Acesse o link, envie o código e faça uma transferência urgente."
-    ]
+def iniciar_cyberguard():
+    print("CYBERGUARD IA")
+    print("Analisador de mensagens iniciado!")
+    print("Digite 'sair' para encerrar.\n")
 
-    print("CyberGuard IA iniciada!\n")
+    while True:
+        mensagem = input("Digite ou cole uma mensagem: ")
 
-    for mensagem in mensagens:
-        print("Mensagem:", mensagem)
-        print("Resultado:", verificar_mensagem(mensagem))
+        if mensagem.lower().strip() == "sair":
+            print("CyberGuard IA encerrado.")
+            break
+
+        if not mensagem.strip():
+            print("Digite uma mensagem para analisar.\n")
+            continue
+
+        resultado = verificar_mensagem(mensagem)
+
+        print("\nResultado da análise:")
+        print(resultado)
         print("-" * 40)
 
 
 if __name__ == "__main__":
-    testar_cyberguard()
+    iniciar_cyberguard()
+
