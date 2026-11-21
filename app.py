@@ -1,5 +1,6 @@
 
-# CYBERGUARD IA - ETAPA 4
+# CYBERGUARD IA - ETAPA 5
+# HISTORICO DE ANALISES
 
 biblioteca_golpes = {
     "Roubo de dados": [
@@ -10,21 +11,18 @@ biblioteca_golpes = {
         "envie o código",
         "código recebido"
     ],
-
     "Golpes financeiros": [
         "prêmio falso",
         "ganhe dinheiro fácil",
         "transferência urgente",
         "pix premiado"
     ],
-
     "Links suspeitos": [
         "clique aqui",
         "acesse o link",
         "link de confirmação",
         "link para atualizar"
     ],
-
     "Falsas urgências": [
         "urgente",
         "conta bloqueada",
@@ -33,6 +31,8 @@ biblioteca_golpes = {
         "última oportunidade"
     ]
 }
+
+historico = []
 
 
 def analisar_mensagem(mensagem):
@@ -53,7 +53,6 @@ def analisar_mensagem(mensagem):
 
 def verificar_mensagem(mensagem):
     encontrados = analisar_mensagem(mensagem)
-
     quantidade = len(encontrados)
 
     if quantidade >= 3:
@@ -75,32 +74,64 @@ def verificar_mensagem(mensagem):
 
             for palavra in palavras:
                 resultado += f"- {palavra}\n"
+    else:
+        resultado = (
+            "Nenhum termo suspeito encontrado.\n"
+            "Risco: BAIXO"
+        )
 
-        return resultado
+    return risco, resultado
 
-    return (
-        "Nenhum termo suspeito encontrado.\n"
-        "Risco: BAIXO"
-    )
+
+def mostrar_historico():
+    if not historico:
+        print("\nNenhuma análise registrada.")
+        return
+
+    print("\nHISTÓRICO DE ANÁLISES")
+
+    for numero, registro in enumerate(historico, start=1):
+        print(f"\nAnálise {numero}")
+        print(f"Mensagem: {registro['mensagem']}")
+        print(f"Risco: {registro['risco']}")
+
+    print("-" * 40)
 
 
 def iniciar_cyberguard():
-    print("CYBERGUARD IA")
-    print("Analisador de mensagens iniciado!")
+    print("CYBERGUARD IA - ETAPA 5")
+    print("Digite 'historico' para consultar.")
+    print("Digite 'limpar' para apagar o histórico.")
     print("Digite 'sair' para encerrar.\n")
 
     while True:
         mensagem = input("Digite ou cole uma mensagem: ")
 
-        if mensagem.lower().strip() == "sair":
+        comando = mensagem.lower().strip()
+
+        if comando == "sair":
             print("CyberGuard IA encerrado.")
             break
+
+        if comando == "historico":
+            mostrar_historico()
+            continue
+
+        if comando == "limpar":
+            historico.clear()
+            print("Histórico apagado!")
+            continue
 
         if not mensagem.strip():
             print("Digite uma mensagem para analisar.\n")
             continue
 
-        resultado = verificar_mensagem(mensagem)
+        risco, resultado = verificar_mensagem(mensagem)
+
+        historico.append({
+            "mensagem": mensagem,
+            "risco": risco
+        })
 
         print("\nResultado da análise:")
         print(resultado)
