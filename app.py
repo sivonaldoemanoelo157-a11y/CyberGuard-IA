@@ -1,5 +1,4 @@
 
-
 def analisar_mensagem(mensagem):
     palavras_suspeitas = [
         "senha",
@@ -29,14 +28,26 @@ def analisar_mensagem(mensagem):
 
 def verificar_mensagem(mensagem):
     encontrados = analisar_mensagem(mensagem)
+    quantidade = len(encontrados)
+
+    if quantidade >= 3:
+        risco = "ALTO"
+    elif quantidade >= 1:
+        risco = "MEDIO"
+    else:
+        risco = "BAIXO"
 
     if encontrados:
         return (
-            "⚠️ Mensagem suspeita! Termos encontrados: "
-            + ", ".join(encontrados)
+            "Mensagem suspeita!\n"
+            f"Risco: {risco}\n"
+            f"Motivos encontrados: {', '.join(encontrados)}"
         )
 
-    return "✅ Nenhum termo suspeito encontrado."
+    return (
+        "Nenhum termo suspeito encontrado.\n"
+        "Risco: BAIXO"
+    )
 
 
 def testar_cyberguard():
@@ -46,7 +57,7 @@ def testar_cyberguard():
         "Olá, tudo bem? Como foi seu dia?"
     ]
 
-    print("🛡️ CyberGuard IA iniciada!\n")
+    print("CyberGuard IA iniciada!\n")
 
     for mensagem in mensagens:
         print("Mensagem:", mensagem)
@@ -56,3 +67,4 @@ def testar_cyberguard():
 
 if __name__ == "__main__":
     testar_cyberguard()
+
