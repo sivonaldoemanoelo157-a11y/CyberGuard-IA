@@ -10,7 +10,6 @@ def analisar_mensagem(mensagem):
         "código de verificação",
         "conta bloqueada",
         "conta foi bloqueada",
-        "foi bloqueada",
         "confirmar dados",
         "confirme seus dados",
         "confirme seus dados imediatamente"
@@ -67,4 +66,5 @@ def testar_cyberguard():
 
 if __name__ == "__main__":
     testar_cyberguard()
+
 
