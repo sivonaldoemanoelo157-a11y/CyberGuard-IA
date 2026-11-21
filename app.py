@@ -1,5 +1,5 @@
 
-# CYBERGUARD IA - ANALISE DE MENSAGENS
+# CYBERGUARD IA - ETAPA 3
 
 biblioteca_golpes = {
     "Roubo de dados": [
@@ -58,8 +58,10 @@ def verificar_mensagem(mensagem):
 
     if quantidade >= 3:
         risco = "ALTO"
-    elif quantidade >= 1:
+    elif quantidade == 2:
         risco = "MEDIO"
+    elif quantidade == 1:
+        risco = "ATENCAO"
     else:
         risco = "BAIXO"
 
@@ -70,7 +72,7 @@ def verificar_mensagem(mensagem):
         ]
 
         return (
-            "Mensagem suspeita!\n"
+            "Sinais suspeitos encontrados!\n"
             f"Risco: {risco}\n"
             "Motivos encontrados:\n"
             + "\n".join(motivos)
@@ -107,4 +109,3 @@ def iniciar_cyberguard():
 
 if __name__ == "__main__":
     iniciar_cyberguard()
-
