@@ -1,1 +1,268 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard IA</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #101827;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 35px auto;
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #38bdf8;
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: #cbd5e1;
+        }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: white;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #0284c7;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0369a1;
+        }
+
+        #resultado {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #0f172a;
+            white-space: pre-wrap;
+        }
+
+        h2 {
+            color: #38bdf8;
+            margin-top: 30px;
+        }
+
+        #historico {
+            color: #cbd5e1;
+            line-height: 1.7;
+        }
+
+        .aviso {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🛡️ CyberGuard IA</h1>
+
+        <p class="subtitulo">
+            Central inteligente de proteção digital
+        </p>
+
+        <textarea
+            id="mensagem"
+            placeholder="Cole aqui uma mensagem para analisar..."
+        ></textarea>
+
+        <button onclick="analisarMensagem()">
+            🔍 Analisar mensagem
+        </button>
+
+        <div id="resultado">
+            Aguardando mensagem para análise...
+        </div>
+
+        <h2>📋 Histórico de análises</h2>
+
+        <div id="historico">
+            Nenhuma análise realizada.
+        </div>
+
+        <button onclick="limparHistorico()">
+            Limpar histórico
+        </button>
+
+        <p class="aviso">
+            Esta é uma versão inicial de demonstração.
+            Nenhuma análise garante que uma mensagem seja segura.
+        </p>
+
+    </div>
+
+    <script>
+        const biblioteca = {
+            "Roubo de dados": [
+                "informe sua senha",
+                "envie sua senha",
+                "confirme seus dados",
+                "codigo de verificacao",
+                "envie o codigo",
+                "dados bancarios",
+                "informacoes pessoais"
+            ],
+
+            "Golpes financeiros": [
+                "premio falso",
+                "ganhe dinheiro facil",
+                "transferencia urgente",
+                "pix premiado",
+                "dinheiro gratis",
+                "emprestimo aprovado"
+            ],
+
+            "Links suspeitos": [
+                "clique aqui para confirmar",
+                "acesse o link de confirmacao",
+                "link para atualizar seus dados",
+                "acesse agora para receber"
+            ],
+
+            "Falsas urgencias": [
+                "sua conta foi bloqueada",
+                "conta sera bloqueada",
+                "acao imediata",
+                "ultima oportunidade",
+                "sua conta sera encerrada"
+            ]
+        };
+
+        let historico = [];
+
+        function normalizar(texto) {
+            return texto
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function analisarMensagem() {
+            const entrada =
+                document.getElementById("mensagem").value;
+
+            if (!entrada.trim()) {
+                alert("Digite uma mensagem primeiro.");
+                return;
+            }
+
+            const mensagem = normalizar(entrada);
+            let encontrados = [];
+
+            for (const categoria in biblioteca) {
+                for (const frase of biblioteca[categoria]) {
+                    if (mensagem.includes(frase)) {
+                        encontrados.push(
+                            categoria + ": " + frase
+                        );
+                        break;
+                    }
+                }
+            }
+
+            let risco = "BAIXO";
+
+            if (encontrados.length >= 3) {
+                risco = "ALTO";
+            } else if (encontrados.length === 2) {
+                risco = "MEDIO";
+            } else if (encontrados.length === 1) {
+                risco = "ATENCAO";
+            }
+
+            let resultado;
+
+            if (encontrados.length > 0) {
+                resultado =
+                    "Sinais suspeitos encontrados!\n\n" +
+                    "Risco: " + risco + "\n\n" +
+                    encontrados.join("\n");
+            } else {
+                resultado =
+                    "Nenhum sinal conhecido foi encontrado.\n\n" +
+                    "Risco: BAIXO\n\n" +
+                    "Isso não garante que a mensagem seja segura.";
+            }
+
+            document.getElementById("resultado").textContent =
+                resultado;
+
+            historico.unshift({
+                mensagem: entrada,
+                risco: risco
+            });
+
+            mostrarHistorico();
+        }
+
+        function mostrarHistorico() {
+            const area = document.getElementById("historico");
+
+            if (historico.length === 0) {
+                area.textContent = "Nenhuma análise realizada.";
+                return;
+            }
+
+            area.innerHTML = "";
+
+            historico.forEach((item, indice) => {
+                const registro = document.createElement("p");
+
+                registro.textContent =
+                    (indice + 1) + ". Risco: " + item.risco +
+                    " — " + item.mensagem;
+
+                area.appendChild(registro);
+            });
+        }
+
+        function limparHistorico() {
+            historico = [];
+            mostrarHistorico();
+        }
+    </script>
+
+</body>
+</html>
+
