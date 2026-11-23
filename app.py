@@ -1,8 +1,17 @@
 
-# CYBERGUARD IA - ETAPA 7
-# REDUCAO DE FALSOS ALERTAS
-
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import unicodedata
+
+app = Flask(__name__)
+
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "https://sivonaldoemanoelo157-a11y.github.io"
+        ]
+    }
+})
 
 biblioteca_golpes = {
     "Roubo de dados": [
@@ -50,23 +59,15 @@ def normalizar(texto):
     )
 
 
-def analisar_mensagem(mensagem):
-    mensagem = normalizar(mensagem)
+def verificar_mensagem(mensagem):
+    texto = normalizar(mensagem)
     encontrados = {}
 
     for categoria, frases in biblioteca_golpes.items():
         for frase in frases:
-            if frase in mensagem:
-                if categoria not in encontrados:
-                    encontrados[categoria] = []
+            if frase in texto:
+                encontrados[categoria] = [frase]
 
-                encontrados[categoria].append(frase)
-
-    return encontrados
-
-
-def verificar_mensagem(mensagem):
-    encontrados = analisar_mensagem(mensagem)
     quantidade = len(encontrados)
 
     if quantidade >= 3:
@@ -85,7 +86,6 @@ def verificar_mensagem(mensagem):
 
         for categoria, frases in encontrados.items():
             resultado += f"\n{categoria}:\n"
-
             for frase in frases:
                 resultado += f"- {frase}\n"
     else:
@@ -95,62 +95,56 @@ def verificar_mensagem(mensagem):
             "Isso nao garante que a mensagem seja segura."
         )
 
-    return risco, resultado
+    return risco, resultado, encontrados
 
 
-def mostrar_historico():
-    if not historico:
-        print("\nNenhuma analise registrada.")
-        return
-
-    print("\nHISTORICO DE ANALISES")
-
-    for numero, registro in enumerate(historico, start=1):
-        print(f"\nAnalise {numero}")
-        print(f"Mensagem: {registro['mensagem']}")
-        print(f"Risco: {registro['risco']}")
-
-    print("-" * 40)
+@app.route("/", methods=["GET"])
+def inicio():
+    return jsonify({
+        "status": "online",
+        "projeto": "CyberGuard IA"
+    })
 
 
-def iniciar_cyberguard():
-    print("CYBERGUARD IA - ETAPA 7")
-    print("Digite 'historico' para consultar.")
-    print("Digite 'limpar' para apagar o historico.")
-    print("Digite 'sair' para encerrar.\n")
+@app.route("/analisar", methods=["POST"])
+def analisar():
+    dados = request.get_json(silent=True) or {}
+    mensagem = dados.get("mensagem", "")
 
-    while True:
-        mensagem = input("Digite ou cole uma mensagem: ")
-        comando = mensagem.lower().strip()
+    if not isinstance(mensagem, str) or not mensagem.strip():
+        return jsonify({
+            "erro": "Envie uma mensagem valida para analisar."
+        }), 400
 
-        if comando == "sair":
-            print("CyberGuard IA encerrado.")
-            break
+    risco, resultado, encontrados = verificar_mensagem(mensagem)
 
-        if comando == "historico":
-            mostrar_historico()
-            continue
+    registro = {
+        "mensagem": mensagem,
+        "risco": risco
+    }
 
-        if comando == "limpar":
-            historico.clear()
-            print("Historico apagado!")
-            continue
+    historico.insert(0, registro)
 
-        if not mensagem.strip():
-            print("Digite uma mensagem para analisar.\n")
-            continue
+    return jsonify({
+        "risco": risco,
+        "resultado": resultado,
+        "categorias": encontrados,
+        "historico": historico[:20]
+    })
 
-        risco, resultado = verificar_mensagem(mensagem)
 
-        historico.append({
-            "mensagem": mensagem,
-            "risco": risco
-        })
+@app.route("/historico", methods=["GET"])
+def consultar_historico():
+    return jsonify(historico[:20])
 
-        print("\nResultado da analise:")
-        print(resultado)
-        print("-" * 40)
+
+@app.route("/historico", methods=["DELETE"])
+def limpar_historico():
+    historico.clear()
+    return jsonify({
+        "mensagem": "Historico apagado com sucesso."
+    })
 
 
 if __name__ == "__main__":
-    iniciar_cyberguard()
+    app.run(host="0.0.0.0", port=5000)
